@@ -12,10 +12,10 @@ using std::vector;
 class Piece
 {
 private:
-    string _type;
+
 public:
-    Piece(const string type);
-    ~Piece();
+    Piece();
+    virtual ~Piece();
 
     virtual bool isMoveValid(const short src, const short dest) const = 0;
     virtual vector <short> getPath(const short src, const short dest) const = 0;

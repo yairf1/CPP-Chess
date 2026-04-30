@@ -8,10 +8,10 @@
 #include "king.h"
 
 Board::Board(){
-    this->currentTurn = _player::white;
+    this->currentTurn = m_player::white;
     // debuging string
-    this->_boardString = "R##K###R################################################r##k###r0 ";
-    // this->_boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbkqbnr0 ";
+    this->m_boardString = "R##K###R################################################r###k##r0 ";
+    // this->m_boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbkqbnr0 ";
 }
 
 Board::~Board(){}
@@ -38,24 +38,24 @@ Piece* createPiece(char& c) {
 }
 
 // helper method - get King position by color, return index of king
-short Board::getKingPos(_player color) const{
-    if (color == _player::white) {  
-        return _boardString.find('K'); 
+short Board::getKingPos(m_player color) const{
+    if (color == m_player::white) {  
+        return m_boardString.find('K'); 
     }else {
-        return _boardString.find('k');
+        return m_boardString.find('k');
     }
 }
 
 // passing the turn to the other player
 void Board::passTurn() {
-    currentTurn == _player::white ? currentTurn = _player::black : currentTurn = _player::white;
+    currentTurn == m_player::white ? currentTurn = m_player::black : currentTurn = m_player::white;
     
 }
 
 void Board::movePiece(const short& src, const short& dest){
     // move piece to src then clear src
-    this->_boardString[dest] = this->_boardString[src];
-    this->_boardString[src] = '#';
+    this->m_boardString[dest] = this->m_boardString[src];
+    this->m_boardString[src] = '#';
 }
 
 // validate the move, if valid passing the turn to the other player
@@ -67,26 +67,31 @@ short Board::move(string command){
     Piece* piece = nullptr;
 
     // board tiles validations
-    if (!this->isInTheBoard(src, dest)){ return _codes::invalid_index; }
-    if (this->isDestSelfOccupied(dest)){ return _codes::dest_occupied; }
-    if (this->isSrcSelfFree(src)){ return _codes::src_free; }
-    if (this->isDestSameAsSrc(src, dest)){ return _codes::src_equals_dest; }
+    if (!this->isInTheBoard(src, dest)){ return m_codes::invalid_index; }
+    if (this->isDestSelfOccupied(dest)){ return m_codes::dest_occupied; }
+    if (this->isSrcSelfFree(src)){ return m_codes::src_free; }
+    if (this->isDestSameAsSrc(src, dest)){ return m_codes::src_equals_dest; }
 
     // piece movment validations
-    piece = createPiece(_boardString[src]);
+    piece = createPiece(m_boardString[src]);
+    if (!piece)
+    {
+        throw std::runtime_error("unknown piece type");
+    }
+    
     auto path = piece->getPath(src, dest);
 
     if ( this->isMoveBlocked(path, dest) || !piece->isMoveValid(src, dest)){ 
         delete piece;
         piece = nullptr;
-        return _codes::invalid_move;
+        return m_codes::invalid_move;
     }
 
     // validations of check and checkmate
     if (this->isSelfCheck(src, dest)){ 
         delete piece;
         piece = nullptr;
-        return _codes::self_check; 
+        return m_codes::self_check; 
     }
 
     if (this->isCheckmate(path, dest, piece)){
@@ -94,7 +99,7 @@ short Board::move(string command){
         passTurn();
         delete piece;
         piece = nullptr;
-        return _codes::valid_checkmate;
+        return m_codes::valid_checkmate;
     }
 
     if (this->isKingInCheck(dest, piece)){
@@ -102,7 +107,7 @@ short Board::move(string command){
         passTurn();
         delete piece;
         piece = nullptr;
-        return _codes::valid_and_checked; 
+        return m_codes::valid_and_checked; 
     }
     
     // if neither of the special codes, return valid_move and pass turn
@@ -110,7 +115,7 @@ short Board::move(string command){
     passTurn();
     delete piece;
     piece = nullptr;
-    return _codes::valid_move;
+    return m_codes::valid_move;
     
 }
 
@@ -127,11 +132,11 @@ short Board::move(string command){
 
     bool Board::isDestSelfOccupied(const short& dest) const{
         // check if there is a piece with the same color
-        char destPiece = _boardString[dest];
-        if (currentTurn == _player::white && isupper(destPiece))
+        char destPiece = m_boardString[dest];
+        if (currentTurn == m_player::white && isupper(destPiece))
         {
             return true;
-        } if (currentTurn == _player::black && islower(destPiece)) {
+        } if (currentTurn == m_player::black && islower(destPiece)) {
             return true;
         }
 
@@ -140,11 +145,11 @@ short Board::move(string command){
 
     bool Board::isSrcSelfFree(const short& src) const{
         // check if there is a piece with the same color
-        char destPiece = _boardString[src];
-        if (currentTurn == _player::white && isupper(destPiece))
+        char destPiece = m_boardString[src];
+        if (currentTurn == m_player::white && isupper(destPiece))
         {
             return false;
-        } if (currentTurn == _player::black && islower(destPiece)) {
+        } if (currentTurn == m_player::black && islower(destPiece)) {
             return false;
         }
 
@@ -156,17 +161,17 @@ short Board::move(string command){
     }
 
     bool Board::isEnemyPiece(const short& dest) const{
-        char destPiece = _boardString[dest];
+        char destPiece = m_boardString[dest];
 
         if (destPiece == '#'){
             return false;
         }
 
-        if (currentTurn == _player::black && std::isupper(destPiece)) {
+        if (currentTurn == m_player::black && std::isupper(destPiece)) {
             return true;
         }
 
-        if (currentTurn == _player::white && std::islower(destPiece)) {
+        if (currentTurn == m_player::white && std::islower(destPiece)) {
             return true;
         }
 
@@ -174,7 +179,7 @@ short Board::move(string command){
     }
 
     bool Board::isKingInCheck(const short& dest, Piece* piece) const{
-        short kingPos = getKingPos(currentTurn == _player::white ? _player::black : _player::white);
+        short kingPos = getKingPos(currentTurn == m_player::white ? m_player::black : m_player::white);
 
         if (piece->isMoveValid(dest, kingPos) && !this->isMoveBlocked(piece->getPath(dest, kingPos), dest)){
             return true;
@@ -186,7 +191,7 @@ short Board::move(string command){
     bool Board::isCheckmate(const vector <short>& path, const short& dest, Piece* p) const{
         if (!this->isKingInCheck(dest, p)) return false;
 
-        short kingPos = getKingPos(currentTurn == _player::white ? _player::black : _player::white);
+        short kingPos = getKingPos(currentTurn == m_player::white ? m_player::black : m_player::white);
         // check if the king can escape
         short row = kingPos / 8;
         short col = kingPos % 8;
@@ -215,32 +220,31 @@ short Board::move(string command){
         Piece* piece = nullptr;
         for (int i = 0; i < 64; i++)
         {
-            char destPiece = _boardString[i];
-            if (destPiece != '#')
+            char destPiece = m_boardString[i];
+            if (destPiece == '#') continue;
+            piece = createPiece(destPiece);
+
+            for (auto &&tile : path)
             {
-                piece = createPiece(destPiece);
+                auto piecePath = piece->getPath(i, tile);
 
-                for (auto &&tile : path)
-                {
-                    auto piecePath = piece->getPath(i, tile);
-                    if(currentTurn == _player::white && std::isupper(destPiece)){
-                        if (piece->isMoveValid(destPiece, tile) && !this->isMoveBlocked(piecePath, dest) && !this->isSelfCheck(destPiece, tile))
-                        {
-                            delete piece;
-                            piece = nullptr;
-                            return false;
-                        }
+                if(currentTurn == m_player::white && std::isupper(destPiece)){
+                    if (piece->isMoveValid(i, tile) && !this->isMoveBlocked(piecePath, dest) && !this->isSelfCheck(i, tile))
+                    {
+                        delete piece;
+                        piece = nullptr;
+                        return false;
                     }
+                }
 
-                    if(currentTurn == _player::black && std::islower(destPiece)){
-                        if (piece->isMoveValid(destPiece, tile) && !this->isMoveBlocked(piecePath, dest) && !this->isSelfCheck(destPiece, tile))
-                        {
-                            delete piece;
-                            piece = nullptr;
-                            return false;
-                        }
-                            
+                if(currentTurn == m_player::black && std::islower(destPiece)){
+                    if (piece->isMoveValid(i, tile) && !this->isMoveBlocked(piecePath, dest) && !this->isSelfCheck(i, tile))
+                    {
+                        delete piece;
+                        piece = nullptr;
+                        return false;
                     }
+                        
                 }
             }
         }
@@ -254,12 +258,12 @@ short Board::move(string command){
     bool Board::isMoveBlocked(const vector<short>& path, const short& dest) const {
 
         for (int i = 0; i < path.size(); i++) {
-            if (_boardString[path[i]] != '#') {
+            if (m_boardString[path[i]] != '#') {
                 return true;
             }
         }
 
-        char destPiece = _boardString[dest];
+        char destPiece = m_boardString[dest];
 
         if (destPiece == '#') {
             return false;
@@ -274,7 +278,7 @@ short Board::move(string command){
 
     bool Board::isSelfCheck(const short& src, const short& dest) const{
         // making the temporary move to tmp string to validate self check
-        string tmpBoard = _boardString;
+        string tmpBoard = m_boardString;
         short tmpSrc = tmpBoard[src];
         tmpBoard[src] = '#';
         tmpBoard[dest] = tmpSrc;
@@ -284,11 +288,12 @@ short Board::move(string command){
 
         for (int i = 0; i < 64; i ++)
         {
+            if (tmpBoard[i] == '#') continue;
             piece = createPiece(tmpBoard[i]);
             auto piecePath = piece->getPath(i, kingPos);
 
             // for white player check black pieces by checking if lower case
-            if (currentTurn == _player::white && islower( tmpBoard[i])){
+            if (currentTurn == m_player::white && islower( tmpBoard[i])){
                 if (piece->isMoveValid(i, kingPos) && !this->isMoveBlocked(piecePath, dest)){
                     delete piece;
                     piece = nullptr;
@@ -297,7 +302,7 @@ short Board::move(string command){
             }
 
             // for black player check white pieces by checking if upper case
-            if (currentTurn == _player::black && isupper( tmpBoard[i])){
+            if (currentTurn == m_player::black && isupper( tmpBoard[i])){
                 if (piece->isMoveValid(i, kingPos) && !this->isMoveBlocked(piecePath, dest)){
                     delete piece;
                     piece = nullptr;
@@ -317,9 +322,9 @@ short Board::move(string command){
 
 // simple getters
 string Board::getBoardString() const{
-    return _boardString;
+    return m_boardString;
 }
 
 short Board::getCurrentTurn() const{
-    return currentTurn == _player::white ? 0 : 1;
+    return currentTurn == m_player::white ? 0 : 1;
 }

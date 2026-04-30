@@ -3,7 +3,7 @@
 class Rook : public Piece
 {
 private:
-    string _type;
+
 public:
     Rook();
     ~Rook();

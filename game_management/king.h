@@ -12,7 +12,7 @@ using std::vector;
 class King : public Piece
 {
 private:
-    string _type;
+
 public:
     King();
     ~King();

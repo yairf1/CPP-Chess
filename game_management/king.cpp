@@ -2,9 +2,7 @@
 
 #include <math.h>
 
-King::King() : Piece::Piece("king"){
-
-}
+King::King(){}
 
 King::~King(){}
 

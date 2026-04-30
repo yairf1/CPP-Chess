@@ -14,12 +14,12 @@ class Board
 {
 private:
     // saving the board state as string
-    string _boardString;
+    string m_boardString;
     // return codes
-    enum _codes {valid_move, valid_and_checked, src_free, dest_occupied, self_check, invalid_index, invalid_move, src_equals_dest, valid_checkmate};
+    enum m_codes {valid_move, valid_and_checked, src_free, dest_occupied, self_check, invalid_index, invalid_move, src_equals_dest, valid_checkmate};
     // saving the current player
-    enum class _player {white, black};
-    _player currentTurn;
+    enum class m_player {white, black};
+    m_player currentTurn;
 
     // ===== validations methods =====
 
@@ -33,7 +33,7 @@ private:
     bool isCheckmate(const vector <short>& path, const short& dest, Piece* piece) const;
     bool isMoveBlocked(const vector <short>& path, const short& dest) const;
     bool isSelfCheck(const short& src = 0, const short& dest = 0) const;
-    short getKingPos(_player color) const;
+    short getKingPos(m_player color) const;
 
     // ===== validations methods =====
 

@@ -1,8 +1,6 @@
 #include "rook.h"
 
-Rook::Rook() : Piece("rook"){
-
-}
+Rook::Rook(){}
 
 Rook::~Rook(){}
 
