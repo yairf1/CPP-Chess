@@ -43,7 +43,7 @@ private:
     void movePiece(const short& src, const short& dest);
     
 public:
-    Board();
+    Board(m_player currentTurn = m_player::white, /*debug string*/ string boardString = "R##K###R################################################r###k##r0 " /* string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbkqbnr0 " */);
     ~Board();
     
     // move the piece after validations and return the code or dont move and return err code

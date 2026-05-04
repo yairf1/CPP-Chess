@@ -7,11 +7,10 @@
 #include "rook.h"
 #include "king.h"
 
-Board::Board(){
-    this->currentTurn = m_player::white;
+Board::Board(m_player currentTurn, string boardString){
+    this->currentTurn = currentTurn;
     // debuging string
-    this->m_boardString = "R##K###R################################################r###k##r0 ";
-    // this->m_boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbkqbnr0 ";
+    this->m_boardString = boardString;
 }
 
 Board::~Board(){}
@@ -278,23 +277,24 @@ short Board::move(string command){
 
     bool Board::isSelfCheck(const short& src, const short& dest) const{
         // making the temporary move to tmp string to validate self check
-        string tmpBoard = m_boardString;
-        short tmpSrc = tmpBoard[src];
-        tmpBoard[src] = '#';
-        tmpBoard[dest] = tmpSrc;
+        Board tmpBoard(currentTurn, m_boardString);
+        tmpBoard.movePiece(src, dest);
+        tmpBoard.passTurn();
 
-        int kingPos = getKingPos(currentTurn);
+        int kingPos = tmpBoard.getKingPos(currentTurn);
+        string tmpBoardString = tmpBoard.getBoardString();
         Piece* piece = nullptr;
 
         for (int i = 0; i < 64; i ++)
         {
-            if (tmpBoard[i] == '#') continue;
-            piece = createPiece(tmpBoard[i]);
+            char square = tmpBoardString[i];
+            if (square == '#') continue;
+            piece = createPiece(square);
             auto piecePath = piece->getPath(i, kingPos);
 
             // for white player check black pieces by checking if lower case
-            if (currentTurn == m_player::white && islower( tmpBoard[i])){
-                if (piece->isMoveValid(i, kingPos) && !this->isMoveBlocked(piecePath, dest)){
+            if (currentTurn == m_player::white && islower(square)){
+                if (piece->isMoveValid(i, kingPos) && !tmpBoard.isMoveBlocked(piecePath, kingPos)){
                     delete piece;
                     piece = nullptr;
                     return true;
@@ -302,8 +302,8 @@ short Board::move(string command){
             }
 
             // for black player check white pieces by checking if upper case
-            if (currentTurn == m_player::black && isupper( tmpBoard[i])){
-                if (piece->isMoveValid(i, kingPos) && !this->isMoveBlocked(piecePath, dest)){
+            if (currentTurn == m_player::black && isupper(square)){
+                if (piece->isMoveValid(i, kingPos) && !tmpBoard.isMoveBlocked(piecePath, kingPos)){
                     delete piece;
                     piece = nullptr;
                     return true;
