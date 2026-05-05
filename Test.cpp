@@ -1,10 +1,4 @@
-#pragma once
-
 #include "game_management/board.h"
-
-#include <iostream>
-#include <string>
-#include <vector>
 
 using std::cin;
 using std::cout;

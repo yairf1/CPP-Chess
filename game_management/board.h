@@ -1,9 +1,13 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <cctype>
 
 #include "piece.h"
 #include "king.h"
+#include "rook.h"
+#include "bishop.h"
+#include "queen.h"
 
 using std::cerr;
 using std::cout;
@@ -43,7 +47,7 @@ private:
     void movePiece(const short& src, const short& dest);
     
 public:
-    Board(m_player currentTurn = m_player::white, /*debug string*/ string boardString = "R##K###R####################################################k##r0 " /* string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbkqbnr0 " */);
+    Board(m_player currentTurn = m_player::white, /*debug string*/ string boardString = "R#BKQB#R################################################r#bqkb#r0 " /* string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbqkbnr0 " */);
     ~Board();
     
     // move the piece after validations and return the code or dont move and return err code

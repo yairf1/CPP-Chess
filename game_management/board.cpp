@@ -1,15 +1,7 @@
-#pragma once
-
-#include <cctype>
-
 #include "board.h"
-#include "piece.h"
-#include "rook.h"
-#include "king.h"
 
 Board::Board(m_player currentTurn, string boardString){
     this->currentTurn = currentTurn;
-    // debuging string
     this->m_boardString = boardString;
 }
 
@@ -27,8 +19,8 @@ Piece* createPiece(char& c) {
     switch (c) {
         case 'r': case 'R': return new Rook();
         case 'k': case 'K': return new King();
-        // case 'b': case 'B': return new Bishop();
-        // case 'q': case 'Q': return new Queen();
+        case 'b': case 'B': return new Bishop();
+        case 'q': case 'Q': return new Queen();
         // case 'n': case 'N': return new Knight();
         // case 'p': case 'P': return new Pawn();
         
