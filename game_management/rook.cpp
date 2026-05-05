@@ -12,12 +12,8 @@ bool Rook::isMoveValid(const short src, const short dest) const {
     int destCol = dest % 8;
 
     // if moving on the same row or colum, move is valid
-    if ((srcRow == destRow || srcCol == destCol) && src != dest)
-    {
-        return true;
-    }
+    return (srcRow == destRow || srcCol == destCol) && src != dest;
 
-    return false;
     
 }
 vector <short> Rook::getPath(const short src, const short dest) const {

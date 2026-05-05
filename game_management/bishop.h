@@ -1,22 +1,15 @@
-#pragma once
-#include <iostream>
-#include <string>
-#include <vector>
-
 #include "piece.h"
 
-using std::string;
-using std::vector;
-
-class King : public Piece
+class Bishop : public Piece
 {
 private:
 
 public:
-    King();
-    ~King();
+    Bishop();
+    ~Bishop();
 
     bool isMoveValid(const short src, const short dest) const override;
     vector <short> getPath(const short src, const short dest) const override;
-
 };
+
+
