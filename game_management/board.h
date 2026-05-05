@@ -30,7 +30,7 @@ private:
     
     bool isEnemyPiece(const short& dest) const;
     bool isKingInCheck(const short& dest, Piece* piece) const;
-    bool isCheckmate(const vector <short>& path, const short& dest, Piece* piece) const;
+    bool isCheckmate(const vector <short>& path, const short& src, const short& dest, Piece* piece) const;
     bool isMoveBlocked(const vector <short>& path, const short& dest) const;
     bool isSelfCheck(const short& src = 0, const short& dest = 0) const;
     short getKingPos(m_player color) const;
@@ -43,7 +43,7 @@ private:
     void movePiece(const short& src, const short& dest);
     
 public:
-    Board(m_player currentTurn = m_player::white, /*debug string*/ string boardString = "R##K###R################################################r###k##r0 " /* string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbkqbnr0 " */);
+    Board(m_player currentTurn = m_player::white, /*debug string*/ string boardString = "R##K###R####################################################k##r0 " /* string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbkqbnr0 " */);
     ~Board();
     
     // move the piece after validations and return the code or dont move and return err code

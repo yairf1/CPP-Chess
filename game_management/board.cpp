@@ -67,9 +67,9 @@ short Board::move(string command){
 
     // board tiles validations
     if (!this->isInTheBoard(src, dest)){ return m_codes::invalid_index; }
-    if (this->isDestSelfOccupied(dest)){ return m_codes::dest_occupied; }
-    if (this->isSrcSelfFree(src)){ return m_codes::src_free; }
     if (this->isDestSameAsSrc(src, dest)){ return m_codes::src_equals_dest; }
+    if (this->isSrcSelfFree(src)){ return m_codes::src_free; }
+    if (this->isDestSelfOccupied(dest)){ return m_codes::dest_occupied; }
 
     // piece movment validations
     piece = createPiece(m_boardString[src]);
@@ -93,7 +93,7 @@ short Board::move(string command){
         return m_codes::self_check; 
     }
 
-    if (this->isCheckmate(path, dest, piece)){
+    if (this->isCheckmate(path, src, dest, piece)){
         movePiece(src, dest);
         passTurn();
         delete piece;
@@ -187,10 +187,15 @@ short Board::move(string command){
         return false;
     }
 
-    bool Board::isCheckmate(const vector <short>& path, const short& dest, Piece* p) const{
+    bool Board::isCheckmate(const vector <short>& path, const short& src, const short& dest, Piece* p) const{
         if (!this->isKingInCheck(dest, p)) return false;
 
-        short kingPos = getKingPos(currentTurn == m_player::white ? m_player::black : m_player::white);
+        Board tmpBoard(currentTurn, m_boardString);
+        tmpBoard.movePiece(src, dest);
+        tmpBoard.passTurn();
+
+        string tmpBoardString = tmpBoard.getBoardString();
+        short kingPos = tmpBoard.getKingPos(tmpBoard.currentTurn);
         // check if the king can escape
         short row = kingPos / 8;
         short col = kingPos % 8;
@@ -209,7 +214,7 @@ short Board::move(string command){
             {
                 short newIndex = newRow * 8 + newCol;
 
-                if (!isDestSelfOccupied(newIndex) && !isSelfCheck(kingPos, newIndex) && newIndex >= 0 && newIndex < 64){
+                if (!tmpBoard.isDestSelfOccupied(newIndex) && !tmpBoard.isSelfCheck(kingPos, newIndex) && newIndex >= 0 && newIndex < 64){
                     return false;
                 }
             }
@@ -219,16 +224,16 @@ short Board::move(string command){
         Piece* piece = nullptr;
         for (int i = 0; i < 64; i++)
         {
-            char destPiece = m_boardString[i];
+            char destPiece = tmpBoardString[i];
             if (destPiece == '#') continue;
             piece = createPiece(destPiece);
 
-            for (auto &&tile : path)
+            for (auto &&square : path)
             {
-                auto piecePath = piece->getPath(i, tile);
+                auto piecePath = piece->getPath(i, square);
 
-                if(currentTurn == m_player::white && std::isupper(destPiece)){
-                    if (piece->isMoveValid(i, tile) && !this->isMoveBlocked(piecePath, dest) && !this->isSelfCheck(i, tile))
+                if(tmpBoard.currentTurn == m_player::white && std::isupper(destPiece)){
+                    if (piece->isMoveValid(i, square) && !tmpBoard.isMoveBlocked(piecePath, dest) && !tmpBoard.isSelfCheck(i, square))
                     {
                         delete piece;
                         piece = nullptr;
@@ -236,8 +241,8 @@ short Board::move(string command){
                     }
                 }
 
-                if(currentTurn == m_player::black && std::islower(destPiece)){
-                    if (piece->isMoveValid(i, tile) && !this->isMoveBlocked(piecePath, dest) && !this->isSelfCheck(i, tile))
+                if(tmpBoard.currentTurn == m_player::black && std::islower(destPiece)){
+                    if (piece->isMoveValid(i, square) && !tmpBoard.isMoveBlocked(piecePath, dest) && !tmpBoard.isSelfCheck(i, square))
                     {
                         delete piece;
                         piece = nullptr;
