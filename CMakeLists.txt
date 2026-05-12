@@ -14,4 +14,5 @@ add_executable(app
     game_management/rook.cpp
     game_management/queen.cpp
     game_management/bishop.cpp
+    game_management/knight.cpp
 )

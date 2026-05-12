@@ -8,8 +8,8 @@
 #include "rook.h"
 #include "bishop.h"
 #include "queen.h"
+#include "knight.h"
 
-using std::cerr;
 using std::cout;
 using std::endl;
 using std::string;
@@ -47,7 +47,7 @@ private:
     void movePiece(const short& src, const short& dest);
     
 public:
-    Board(m_player currentTurn = m_player::white, /*debug string*/ string boardString = "R#BKQB#R################################################r#bqkb#r0 " /* string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbqkbnr0 " */);
+    Board(m_player currentTurn = m_player::white, /*debug string*/ string boardString = "RNBKQBNR################################################rnbqkbnr0 " /* string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbqkbnr0 " */);
     ~Board();
     
     // move the piece after validations and return the code or dont move and return err code

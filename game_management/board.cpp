@@ -21,7 +21,7 @@ Piece* createPiece(char& c) {
         case 'k': case 'K': return new King();
         case 'b': case 'B': return new Bishop();
         case 'q': case 'Q': return new Queen();
-        // case 'n': case 'N': return new Knight();
+        case 'n': case 'N': return new Knight();
         // case 'p': case 'P': return new Pawn();
         
     }
