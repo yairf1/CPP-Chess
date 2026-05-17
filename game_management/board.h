@@ -9,6 +9,7 @@
 #include "bishop.h"
 #include "queen.h"
 #include "knight.h"
+#include "pawn.h"
 
 using std::cout;
 using std::endl;
@@ -37,6 +38,7 @@ private:
     bool isCheckmate(const vector <short>& path, const short& src, const short& dest, Piece* piece) const;
     bool isMoveBlocked(const vector <short>& path, const short& dest) const;
     bool isSelfCheck(const short& src = 0, const short& dest = 0) const;
+    bool isPawnMoveValid(const short& src, const short& dest) const;
     short getKingPos(m_player color) const;
 
     // ===== validations methods =====
@@ -47,7 +49,7 @@ private:
     void movePiece(const short& src, const short& dest);
     
 public:
-    Board(m_player currentTurn = m_player::white, /*debug string*/ string boardString = "RNBKQBNR################################################rnbqkbnr0 " /* string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbqkbnr0 " */);
+    Board(m_player currentTurn = m_player::white, string boardString = "RNBKQBNRPPPPPPPP################################pppppppprnbqkbnr0 " );
     ~Board();
     
     // move the piece after validations and return the code or dont move and return err code

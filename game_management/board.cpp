@@ -22,7 +22,7 @@ Piece* createPiece(char& c) {
         case 'b': case 'B': return new Bishop();
         case 'q': case 'Q': return new Queen();
         case 'n': case 'N': return new Knight();
-        // case 'p': case 'P': return new Pawn();
+        case 'p': case 'P': return new Pawn();
         
     }
     return nullptr;
@@ -72,7 +72,8 @@ short Board::move(string command){
     
     auto path = piece->getPath(src, dest);
 
-    if ( this->isMoveBlocked(path, dest) || !piece->isMoveValid(src, dest)){ 
+    bool isPawn = m_boardString[src] == 'p' || m_boardString[src] == 'P';
+    if ( this->isMoveBlocked(path, dest) || !piece->isMoveValid(src, dest) || (isPawn && !this->isPawnMoveValid(src, dest))){ 
         delete piece;
         piece = nullptr;
         return m_codes::invalid_move;
@@ -313,6 +314,33 @@ short Board::move(string command){
         
         piece = nullptr;
         return false;
+    }
+
+    bool Board::isPawnMoveValid(const short& src, const short& dest) const{
+        Pawn p;
+        bool result;
+        int srcRow = src / 8;
+        // for each move type check if valid
+        switch (p.getMoveType(src, dest)){
+            case Pawn::PawnMoveType::first:
+                // for first move check if the pawn is in the first line
+                if (currentTurn == m_player::white) result = (srcRow == 1);
+                if (currentTurn == m_player::black) result = (srcRow == 6);
+                break;
+            case Pawn::PawnMoveType::normal:
+                // check there isnt an enemy in dest
+                result = !isEnemyPiece(dest);
+                break;
+            case Pawn::PawnMoveType::capture:
+                // check if there is an enemy to capture in dest
+                result = isEnemyPiece(dest);
+                break;
+            case Pawn::PawnMoveType::error:
+                result = false;
+                break;
+        }
+
+        return result;
     }
 
 // ===== validations method =====
