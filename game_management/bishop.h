@@ -1,4 +1,5 @@
 #include "piece.h"
+#include <vector>
 
 class Bishop : public Piece
 {

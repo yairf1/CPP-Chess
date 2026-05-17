@@ -1,15 +1,9 @@
 #pragma once
-#include <iostream>
+
 #include <string>
 #include <cctype>
 
 #include "piece.h"
-#include "king.h"
-#include "rook.h"
-#include "bishop.h"
-#include "queen.h"
-#include "knight.h"
-#include "pawn.h"
 
 using std::cout;
 using std::endl;

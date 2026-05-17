@@ -1,9 +1,8 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <vector>
-
 #include "piece.h"
+
+#include <vector>
+#include <cmath>
 
 using std::string;
 using std::vector;

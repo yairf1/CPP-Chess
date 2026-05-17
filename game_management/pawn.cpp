@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "pawn.h"
 
 Pawn::Pawn(){}

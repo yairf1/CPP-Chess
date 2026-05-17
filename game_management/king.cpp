@@ -1,6 +1,6 @@
-#include "king.h"
+#include "stdafx.h"
 
-#include <math.h>
+#include "king.h"
 
 King::King(){}
 

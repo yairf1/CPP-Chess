@@ -1,4 +1,6 @@
 #include "piece.h"
+#include <vector>
+#include <cmath>
 
 class Knight : public Piece
 {

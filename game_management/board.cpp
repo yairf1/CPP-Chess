@@ -1,4 +1,12 @@
+#include "stdafx.h"
+
 #include "board.h"
+#include "king.h"
+#include "rook.h"
+#include "bishop.h"
+#include "queen.h"
+#include "knight.h"
+#include "pawn.h"
 
 Board::Board(m_player currentTurn, string boardString){
     this->currentTurn = currentTurn;

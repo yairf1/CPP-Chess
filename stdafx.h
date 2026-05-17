@@ -11,6 +11,10 @@
 
 #include <stdio.h>
 #include <tchar.h>
-
+#include <cmath>
+#include <iostream>
+#include <string>
+#include <cctype>
+#include <vector>
 
 // TODO: reference additional headers your program requires here

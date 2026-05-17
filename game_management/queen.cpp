@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "queen.h"
 #include "rook.h"
 #include "bishop.h"

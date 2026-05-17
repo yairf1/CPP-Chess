@@ -1,5 +1,7 @@
 #include "piece.h"
 
+#include <vector>
+
 class Rook : public Piece
 {
 private:
